@@ -1,0 +1,10 @@
+#Acronyms
+#LBM -> lean body mass
+#SA/LBM -> surface area to lean body mass ratio
+#absolute SA -> absolute surface area
+
+#Units
+#lean body mass -> kg
+#surface area to lean body mass ratio -> cm^2/kg
+#absolute surface area -> m^2
+#cooling rate -> °C/min
