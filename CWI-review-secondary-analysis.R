@@ -87,19 +87,74 @@ ggplot(d, aes(LBM, Cooling.Rate)) + geom_point() + geom_smooth(method = "lm")
 ggplot(Female, aes(LBM, Cooling.Rate)) + geom_point() + geom_smooth(method = "lm")
 ggplot(Male, aes(LBM, Cooling.Rate)) + geom_point() + geom_smooth(method = "lm")
 
-p <- ggplot(d, aes(LBM, Cooling.Rate)) +
+
+#plot Cooling Rate by LBM
+p_LBM <- ggplot(d, aes(LBM, Cooling.Rate)) +
   geom_point(size = 3, aes(shape=factor(Sex))) + 
   stat_smooth(method = 'lm', aes(linetype = Sex, colour = Sex), se = FALSE) +
   scale_colour_manual(values=c(1,1)) +
   scale_shape_manual(values=c(1, 16)) +
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-                     panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
-  xlab("Lean Body Mass (kg)")+
-  ylab("Cooling Rate (�C.min-1)") +
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), legend.position = "hidden",
+        plot.tag = element_text()) +
+  xlab("Lean Body Mass (kg)") +
+  ylab("Cooling Rate (°C/min)") +
+  labs(tag = "A") +
+  theme(legend.title = element_blank())
+
+p_LBM
+
+
+#plot Cooling Rate by absolute surface area
+p_SA <- ggplot(d, aes(absolute.SA, Cooling.Rate)) +
+  geom_point(size = 3, aes(shape=factor(Sex))) + 
+  stat_smooth(method = 'lm', aes(linetype = Sex, colour = Sex), se = FALSE) +
+  scale_colour_manual(values=c(1,1)) +
+  scale_shape_manual(values=c(1, 16)) +
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), legend.position = "hidden",
+        plot.tag = element_text()) +
+  xlab(expression(paste("Absolute Surface Area (","m",""^2,")",))) +
+  ylab("Cooling Rate (°C/min)") +
+  labs(tag = "B") +
   theme(legend.title = element_blank()) 
 
-p
+p_SA
 
-ggsave("lemire.jpeg", plot=p, dpi = 600, units = "in", width = 6, height = 3)
+
+#plot Cooling Rate by surface area-to-lean body mass ratio
+p_SA.LBM <- ggplot(d, aes(SA.LBM, Cooling.Rate)) +
+  geom_point(size = 3, aes(shape=factor(Sex))) + 
+  stat_smooth(method = 'lm', aes(linetype = Sex, colour = Sex), se = FALSE) +
+  scale_colour_manual(values=c(1,1)) +
+  scale_shape_manual(values=c(1, 16)) +
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), legend.position = "hidden",
+        plot.tag = element_text()) +
+
+  xlab(expression(paste("Surface Area-to-Lean Body Mass Ratio (","cm",""^2,"/kg",")",))) +
+  ylab("Cooling Rate (°C/min)") +
+  labs(tag = "C") +
+  theme(legend.title = element_blank()) 
+
+p_SA.LBM
+
+
+
+#plots arranged
+library(ggpubr)
+combined_plot <- ggarrange (p_LBM, p_SA, p_SA.LBM, 
+                            ncol = 1, nrow = 3, 
+                            common.legend = TRUE,
+                            legend = "bottom")
+combined_plot
+
+
+ggsave("lemire_panel_figure.jpeg", plot=combined_plot, dpi = 600, units = "in", width = 6, height = 9)
 
